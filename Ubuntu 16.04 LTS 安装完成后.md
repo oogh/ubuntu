@@ -213,3 +213,82 @@ sudo apt-get update
 sudo apt-get install openshot-qt
 ```
 
+## 22. 安装FFmpeg
+
+- 下载源码: [源码链接](http://ffmpeg.org/download.html#get-sources)
+
+- 解压
+
+  ```shell
+  tar -xvjf ffmpeg-4.0.tar.bz2
+  ```
+
+- 安装 yasm
+
+  ```shell
+  sudo apt-get install yasm
+  ```
+
+- 运行自动配置
+
+  ```shell
+  ./configure --enable-shared --prefix=/usr/local/ffmpeg
+  ```
+
+- 编译
+
+  ```shell
+  sudo make
+  ```
+
+- 安装
+
+  ```shell
+  sudo make install
+  ```
+
+- 配置环境变量
+
+  ```shell 
+  sudo vim ~/.bashrc
+
+  # 添加下面这一行
+  export PATH=$PATH:/usr/local/ffmpeg/bin
+
+  # 使其立即生效
+  source ~/.bashrc
+  ```
+
+- 其他
+
+  - 为了方便编程
+    1. 把 `/usr/local/ffmpeg/lib` 中的 *libavcodec.so*  *libavformat.so* *libavutil.so* 复制到 `/usr/lib` 中
+    2. 把 `/usr/local/ffmpeg/include` 中的所有文件复制到 `/usr/include` 目录下
+
+- 遇到问题
+
+  - **ffmpeg: error while loading shared libraries: libavdevice.so.58: cannot open shared object file: No such file or directory**
+
+    解决: 
+
+    ```shell
+    sudo find / -name "libavdevice.so.58"
+    #可以得到文件在 /usr/local/ffmpeg/lib 目录下
+    # 然后在 /etc/ld.so.conf 文件中添加一行
+    /usr/local/ffmpeg/lib
+    # 然后使用执行如下命令
+    sudo ldconfig
+    ```
+
+  - **对‘xx_xx_xx’未定义的引用**
+
+    解决:
+
+    ```shell
+    # 配置PKG_CONFIG_PATH环境变量即可
+    export PKG_CONFIG_PATH=/usr/local/ffmpeg/lib/pkconfig
+    # 然后使环境变量立即生效
+    source ~/.bashrc
+    ```
+
+    ​
